@@ -1,0 +1,42 @@
+name: PlantUML Diagrams
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  generate-diagrams-fitlife-01:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Java
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+
+    - name: Install PlantUML
+      run: sudo apt-get install plantuml
+
+    - name: Generate Diagrams
+      run: |
+        plantuml FitLife/diagrams/context/*.puml
+        plantuml FitLife/diagrams/container/*.puml
+        plantuml FitLife/diagrams/component/*.puml
+        plantuml FitLife/diagrams/code/*.puml
+        plantuml FitLife/diagrams/*.puml
+
+    - name: Commit Diagrams
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add FitLife/diagrams/**/*.png
+        git commit -m "Automated diagram generation"
+        git push origin main
+      if: success()

@@ -1,0 +1,12 @@
+@startuml
+Alice -> Bob: Hello
+@enduml
+
+@startuml
+class User {
+  +String name
+  +String email
+  +void register()
+}
+@enduml
+
