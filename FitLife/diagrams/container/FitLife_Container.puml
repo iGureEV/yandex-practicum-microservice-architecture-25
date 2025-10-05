@@ -1,4 +1,3 @@
-```puml
 @startuml
 title FitLife Context Diagram
 
@@ -18,4 +17,3 @@ Rel(FitLifeSystem,api,"Fetches fitness data")
 Rel(FitLifeSystem,bank,"Processes payments")
 
 @enduml
-```
