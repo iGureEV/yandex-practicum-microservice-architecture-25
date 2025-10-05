@@ -10,3 +10,28 @@ class User {
 }
 @enduml
 
+@startuml
+!include C4_Context.puml
+Person(customer, "Customer")
+System_Boundary(c1, "System") {
+    System(spa, "Single Page Application", "Provides a user interface")
+}
+Rel(customer, spa, "Uses")
+@enduml
+
+@startuml
+!include C4_Container.puml
+System_Boundary(c1, "System") {
+    Container(webapp, "Web Application", "JavaScript, Angular", "Provides a user interface")
+    ContainerDb(database, "Database", "SQL", "Stores user data")
+}
+Rel(webapp, database, "Reads from and writes to")
+@enduml
+
+@startuml
+Class User {
+  -String name
+  -String email
+  +void register()
+}
+@enduml
