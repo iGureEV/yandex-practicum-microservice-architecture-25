@@ -3,7 +3,7 @@ title FitLife Context Diagram
 
 top to bottom direction
 
-!include includes/C4_Context.puml
+!include includes/C4_Container.puml
 
 Person(user, "User", "A user of the fitness club system")
 Person(admin, "Administrator", "An administrator managing the system")
