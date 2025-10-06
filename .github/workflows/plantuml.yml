@@ -11,26 +11,12 @@ on:
 jobs:
   generate-diagrams-fitlife-01:
     runs-on: ubuntu-latest
+    container:
+      image: plantuml/plantuml:latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-
-    - name: Set up Java
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'adopt'
-        java-version: '11'
-
-    - name: Download C4-PlantUML
-      run: |
-        mkdir -p includes
-        wget -O includes/C4_Component.puml https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
-        wget -O includes/C4_Context.puml https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Context.puml
-        wget -O includes/C4_Container.puml https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Container.puml
-
-    - name: Install PlantUML
-      run: sudo apt-get install plantuml
 
     - name: Generate Diagrams
       run: |
