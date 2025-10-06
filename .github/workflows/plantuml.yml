@@ -33,8 +33,19 @@ jobs:
         wget https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4.puml
         ls -la
 
-    - name: Install PlantUML
-      run: sudo apt-get install -y plantuml
+    - name: Download and setup latest PlantUML
+      run: |
+        # Скачиваем последнюю версию PlantUML
+        wget -O plantuml.jar https://github.com/plantuml/plantuml/releases/download/v1.2025.8/plantuml-1.2025.8.jar
+        # Создаем скрипт-обертку для запуска
+        echo '#!/bin/bash' > plantuml
+        echo 'java -jar "$(pwd)/plantuml.jar" "$@"' >> plantuml
+        chmod +x plantuml
+        sudo mv plantuml /usr/local/bin/
+        
+    - name: Test PlantUML version
+      run: |
+        plantuml -version
 
     - name: Generate Diagrams with debug
       run: |
