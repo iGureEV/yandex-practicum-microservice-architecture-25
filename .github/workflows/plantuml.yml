@@ -24,12 +24,14 @@ jobs:
 
     - name: Download C4-PlantUML
       run: |
-        cd FitLife/diagrams
-        mkdir -p includes
-        wget -O includes/C4_Component.puml https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
-        wget -O includes/C4_Context.puml https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
-        wget -O includes/C4_Container.puml https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
-        wget -O includes/C4.puml https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4.puml
+        # Создаем директорию includes внутри FitLife/diagrams
+        mkdir -p FitLife/diagrams/includes
+        cd FitLife/diagrams/includes
+        wget https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+        wget https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+        wget https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+        wget https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4.puml
+        ls -la
 
     - name: Install PlantUML
       run: sudo apt-get install -y plantuml
@@ -37,17 +39,17 @@ jobs:
     - name: Generate Diagrams with debug
       run: |
         # Проверим что файлы скачались
-        ls -la includes/
+        ls -la FitLife/diagrams/includes/
         # Генерируем с verbose output
         plantuml -v -o . FitLife/diagrams/context/FitLife_Context.puml
       continue-on-error: true
 
     - name: Generate remaining diagrams
       run: |
-        plantuml -o . FitLife/diagrams/container/*.puml
-        plantuml -o . FitLife/diagrams/component/*.puml
-        plantuml -o . FitLife/diagrams/code/*.puml
-        plantuml -o . FitLife/diagrams/*.puml
+        plantuml -I FitLife/diagrams/includes/ -o . FitLife/diagrams/container/*.puml
+        plantuml -I FitLife/diagrams/includes/ -o . FitLife/diagrams/component/*.puml
+        plantuml -I FitLife/diagrams/includes/ -o . FitLife/diagrams/code/*.puml
+        plantuml -I FitLife/diagrams/includes/ -o . FitLife/diagrams/*.puml
 
     - name: Commit Diagrams
       run: |
