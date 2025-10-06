@@ -11,26 +11,48 @@ on:
 jobs:
   generate-diagrams-fitlife-01:
     runs-on: ubuntu-latest
-    container:
-      image: plantuml/plantuml:latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Generate Diagrams
+    - name: Set up Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '11'
+
+    - name: Download C4-PlantUML
       run: |
-        plantuml FitLife/diagrams/context/*.puml
-        plantuml FitLife/diagrams/container/*.puml
-        plantuml FitLife/diagrams/component/*.puml
-        plantuml FitLife/diagrams/code/*.puml
-        plantuml FitLife/diagrams/*.puml
+        mkdir -p includes
+        wget -O includes/C4_Component.puml https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+        wget -O includes/C4_Context.puml https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+        wget -O includes/C4_Container.puml https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+        wget -O includes/C4.puml https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4.puml
+
+    - name: Install PlantUML
+      run: sudo apt-get install -y plantuml
+
+    - name: Generate Diagrams with debug
+      run: |
+        # Проверим что файлы скачались
+        ls -la includes/
+        # Генерируем с verbose output
+        plantuml -v -o . FitLife/diagrams/context/FitLife_Context.puml
+      continue-on-error: true
+
+    - name: Generate remaining diagrams
+      run: |
+        plantuml -o . FitLife/diagrams/container/*.puml
+        plantuml -o . FitLife/diagrams/component/*.puml
+        plantuml -o . FitLife/diagrams/code/*.puml
+        plantuml -o . FitLife/diagrams/*.puml
 
     - name: Commit Diagrams
       run: |
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
         git add FitLife/diagrams/**/*.png
-        git commit -m "Automated diagram generation"
+        git commit -m "Automated diagram generation" || echo "No changes to commit"
         git push origin main
       if: success()
