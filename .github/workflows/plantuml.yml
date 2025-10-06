@@ -24,6 +24,7 @@ jobs:
 
     - name: Download C4-PlantUML
       run: |
+        cd FitLife/diagrams
         mkdir -p includes
         wget -O includes/C4_Component.puml https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
         wget -O includes/C4_Context.puml https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
